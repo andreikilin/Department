@@ -25,8 +25,9 @@ public class DepartmentDaoHibernate implements DepartmentDao {
     }
 
     @Override
-    public void add(Department department) {
-        getCurrentSession().save(department);
+    public Integer add(Department department) {
+         return (Integer)getCurrentSession().save(department);
+//        System.out.println(departmentReturn);
     }
 
     @Override
@@ -40,7 +41,7 @@ public class DepartmentDaoHibernate implements DepartmentDao {
     }
 
     @Override
-    public Department getById(int id) {
+    public Department getById(Integer id) {
         Department found = (Department) getCurrentSession().get(Department.class, new Integer(id));
         return found;
     }

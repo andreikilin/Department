@@ -24,6 +24,28 @@
             <td><span class="error"><form:errors path="inn" /></span></td>
         </tr>
         <tr>
+            <td>Birthday: </td>
+            <td>
+                <form:select path="day">
+                    <form:option value="0" label="--" />
+                    <form:options items="${dayList}" />
+                </form:select>
+            </td>
+            <td>
+                <form:select path="month">
+                    <form:option value="0" label="--" />
+                    <form:options items="${monthMap}"/>
+                </form:select>
+            </td>
+            <td>
+                <form:select path="year">
+                    <form:option value="0" label="--" />
+                    <form:options items="${yearList}" />
+                </form:select>
+            </td>
+            <td><span class="error"><form:errors path="birthday" /></span></td>
+        </tr>
+        <tr>
             <td>
                 <form:select size="1" path="department" >
                     <form:option value="0" label="Select" />

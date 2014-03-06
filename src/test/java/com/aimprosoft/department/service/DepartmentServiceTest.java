@@ -25,14 +25,14 @@ public class DepartmentServiceTest {
     @Autowired
     private DepartmentService departmentService;
 
-    private final int id = 1;
+    private int id;
     private final String name = "TestDepartment";
     private Department department;
 
     @Before
     public void setUp() throws Exception {
-        department = new Department(id, name);
-        departmentService.add(department);
+        id = departmentService.add(new Department(name));
+        department = departmentService.getById(id);
     }
 
     @After

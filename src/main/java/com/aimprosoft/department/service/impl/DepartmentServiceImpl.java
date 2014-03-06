@@ -20,8 +20,8 @@ public class DepartmentServiceImpl implements DepartmentService {
     DepartmentDao departmentDao;
 
     @Override
-    public void add(Department department) {
-        departmentDao.add(department);
+    public Integer add(Department department) {
+        return departmentDao.add(department);
     }
 
     @Override
@@ -35,7 +35,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Department getById(int id) {
+    public Department getById(Integer id) {
         return departmentDao.getById(id);
     }
 

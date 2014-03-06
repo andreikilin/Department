@@ -81,6 +81,14 @@
           <version>${spring.version}</version>
       </dependency>
 
+      <!-- Validators-->
+
+      <dependency>
+          <groupId>commons-validator</groupId>
+          <artifactId>commons-validator</artifactId>
+          <version>1.4.0</version>
+      </dependency>
+
       <!-- Other -->
 
       <dependency>

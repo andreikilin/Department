@@ -1,6 +1,9 @@
 <%@ include file="common/header.jsp" %>
 
-<h2>Hello World!</h2>
+<h2>Department management</h2>
 
-<a href="/employee/add/">Add employee</a>
+<c:forEach items="${urlMap}" var="url" >
+    <a href="${url.key}">${url.value}</a><br>
+</c:forEach>
+
 <%@ include file="common/header.jsp" %>

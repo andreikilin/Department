@@ -2,6 +2,7 @@ package com.aimprosoft.department.entity;
 
 
 import javax.persistence.*;
+import java.util.Date;
 
 /**
  * Created by merovingien on 3/3/14.
@@ -13,7 +14,7 @@ public class Employee {
     @Id
     @Column(name="id")
     @GeneratedValue //(strategy = GenerationType.TABLE)
-    private int id;
+    private Integer id;
 
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "departmentId")
@@ -28,35 +29,36 @@ public class Employee {
     @Column(name="email")
     private String email;
 
+    @Column(name = "birthday")
+    private Date birthday;
+
     @Column(name="inn")
-    private long inn;
+    private Long inn;
 
-    public Employee() {
+    public Employee() {}
 
-    }
-
-    public Employee(Department department, String firstName, String lastName, String email, long inn) {
+    public Employee(Department department, String firstName, String lastName, String email, Date birthday, Long inn) {
         this.department = department;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+        this.birthday = birthday;
         this.inn = inn;
     }
 
-    public Employee(int id, Department department, String firstName, String lastName, String email, long inn) {
-        this.id = id;
-        this.department = department;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.email = email;
+    public Long getInn() {
+        return inn;
+    }
+
+    public void setInn(Long inn) {
         this.inn = inn;
     }
 
-    public int getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -92,12 +94,12 @@ public class Employee {
         this.email = email;
     }
 
-    public long getInn() {
-        return inn;
+    public Date getBirthday() {
+        return birthday;
     }
 
-    public void setInn(long phone) {
-        this.inn = phone;
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     @Override
@@ -107,11 +109,12 @@ public class Employee {
 
         Employee employee = (Employee) o;
 
-        if (id != employee.id) return false;
-        if (inn != employee.inn) return false;
+        if (!birthday.equals(employee.birthday)) return false;
         if (!department.equals(employee.department)) return false;
         if (!email.equals(employee.email)) return false;
         if (!firstName.equals(employee.firstName)) return false;
+        if (!id.equals(employee.id)) return false;
+        if (!inn.equals(employee.inn)) return false;
         if (!lastName.equals(employee.lastName)) return false;
 
         return true;
@@ -119,12 +122,13 @@ public class Employee {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id.hashCode();
         result = 31 * result + department.hashCode();
         result = 31 * result + firstName.hashCode();
         result = 31 * result + lastName.hashCode();
         result = 31 * result + email.hashCode();
-        result = 31 * result + (int) (inn ^ (inn >>> 32));
+        result = 31 * result + birthday.hashCode();
+        result = 31 * result + inn.hashCode();
         return result;
     }
 
@@ -136,7 +140,8 @@ public class Employee {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", phone=" + inn +
+                ", birthday=" + birthday +
+                ", inn=" + inn +
                 '}';
     }
 }

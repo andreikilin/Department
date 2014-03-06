@@ -5,6 +5,7 @@ import com.aimprosoft.department.entity.Employee;
 import com.aimprosoft.department.form.EmployeeForm;
 import com.aimprosoft.department.service.DepartmentService;
 import com.aimprosoft.department.service.EmployeeService;
+import com.aimprosoft.department.utils.DateUtil;
 import com.aimprosoft.department.validator.EmployeeFormValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
@@ -15,8 +16,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
 import java.beans.PropertyEditorSupport;
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DateFormatSymbols;
+import java.util.*;
 
 /**
  * Created by merovingien on 3/3/14.
@@ -33,6 +34,9 @@ public class EmployeeController {
 
     @Autowired
     private DepartmentService departmentService;
+
+    @Autowired
+    private DateUtil dateUtil;
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -53,23 +57,30 @@ public class EmployeeController {
     @RequestMapping(value = "/employee/add", method = RequestMethod.GET)
     public String addEmployee(ModelMap model) {
         EmployeeForm employeeForm = new EmployeeForm();
+
+        model.put("title", "Add new employee");
         model.put("employeeFormAction", "employee/add");
         model.put("editEmployee", employeeForm);
         model.put("departmentList",departmentService.list());
+        model.put("dayList", dateUtil.getDayList());
+        model.put("monthMap", dateUtil.getMonthMap());
+        model.put("yearList", dateUtil.getYearList());
 
         return "employeeForm";
     }
 
     @RequestMapping(value = "/employee/add", method = RequestMethod.POST)
     public String processEmployee(@ModelAttribute("editEmployee") EmployeeForm employeeForm, BindingResult result, ModelMap model ) {
-
-
         employeeFormValidator.validate(employeeForm,result);
 
-        if (result.hasErrors()) {
+       if (result.hasErrors()) {
+            model.put("title", "Add new employee");
             model.put("employeeFormAction", "employee/add");
             model.put("editEmployee", employeeForm);
             model.put("departmentList",departmentService.list());
+            model.put("dayList", dateUtil.getDayList());
+            model.put("monthMap", dateUtil.getMonthMap());
+            model.put("yearList", dateUtil.getYearList());
             return "employeeForm";
         } else {
             Employee employee = employeeForm.saveEmployee();

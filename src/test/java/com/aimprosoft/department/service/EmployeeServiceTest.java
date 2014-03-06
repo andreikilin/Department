@@ -12,6 +12,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 
+import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
@@ -31,27 +32,40 @@ public class EmployeeServiceTest {
     @Autowired
     private DepartmentService departmentService;
 
-    private final int id = 1;
+    private Integer id;
     private final String firstName = "TestName";
     private final String lastName = "TestSurname";
     private final String email = "testemail@emailtest.com";
-    private final long inn = 423627;
-    private Department department;
+    private final Date birthday = new Date(2011,2,12);
+    private final Long inn = 423627L;
+    private int departmentIdTest1;
+    private int departmentIdTest2;
+    private Department departmentTest1;
+    private Department departmentTest2;
     private Employee employee;
 
 
     @Before
     public void setUp() throws Exception {
-        department = departmentService.getById(2);
-        employee = new Employee(id, department, firstName, lastName, email, inn);
-        employeeService.add(employee);
-    }
+        departmentIdTest1 = departmentService.add(new Department("TestDepartment1"));
+        departmentTest1 = departmentService.getById(departmentIdTest1);
+        departmentIdTest2 = departmentService.add(new Department("TestDepartment2"));
+        departmentTest2 = departmentService.getById(departmentIdTest2);
+        id = employeeService.add(new Employee(departmentTest1, firstName, lastName, email, birthday, inn));
+        employee = employeeService.getById(id);
+     }
 
     @After
     public void tearDown() throws Exception {
         Employee employeeToDelete = employeeService.getById(id);
         if(employeeToDelete != null)
             employeeService.delete(employeeToDelete);
+        Department departmentTest1ToDelete = departmentService.getById(departmentIdTest1);
+        if(departmentTest1ToDelete != null)
+            departmentService.delete(departmentTest1ToDelete);
+        Department departmentTest2ToDelete = departmentService.getById(departmentIdTest2);
+        if(departmentTest2ToDelete != null)
+            departmentService.delete(departmentTest2ToDelete);
     }
 
     @Test
@@ -67,11 +81,12 @@ public class EmployeeServiceTest {
         assertNotNull(found);
         assertEquals(found, employee);
 
-        Employee employeeNew = new Employee(id, department, "Akapulko", lastName, email, 653644);
-        employeeService.update(employeeNew);
-        Employee foundNew = employeeService.getById(id);
-        assertNotNull(foundNew);
-        assertEquals(foundNew, employeeNew);
+        employee.setInn(653644L);
+        employee.setFirstName("Akapulko");
+        employeeService.update(employee);
+        found = employeeService.getById(id);
+        assertNotNull(found);
+        assertEquals(found, employee);
     }
 
     @Test
@@ -99,7 +114,7 @@ public class EmployeeServiceTest {
 
     @Test
     public void testGetByInn() throws Exception {
-        Employee found = employeeService.getById(id);
+        Employee found = employeeService.getByInn(inn);
         assertNotNull(found);
         assertTrue(found.getInn() == employee.getInn());
     }
@@ -112,17 +127,12 @@ public class EmployeeServiceTest {
 
     @Test
     public void testListByDepartment() throws Exception {
-        Department departmentSoft = departmentService.getById(2);
-        assertNotNull(departmentSoft);
-        Department departmentDesign = departmentService.getById(3);
-        assertNotNull(departmentDesign);
+        List<Employee> employeeListTest1 = employeeService.listByDepartment(departmentTest1);
+        assertNotNull(employeeListTest1);
+        assertTrue(employeeListTest1.contains(employee));
 
-        List<Employee> employeeListSoft = employeeService.listByDepartment(departmentSoft);
-        assertNotNull(employeeListSoft);
-        assertTrue(employeeListSoft.contains(employee));
-
-        List<Employee> employeeListDesign = employeeService.listByDepartment(departmentDesign);
-        assertNotNull(employeeListDesign);
-        assertFalse(employeeListDesign.contains(employee));
+        List<Employee> employeeListTest2 = employeeService.listByDepartment(departmentTest2);
+        assertNotNull(employeeListTest2);
+        assertFalse(employeeListTest2.contains(employee));
     }
 }

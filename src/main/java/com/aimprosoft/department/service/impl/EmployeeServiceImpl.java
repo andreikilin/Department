@@ -22,8 +22,8 @@ public class EmployeeServiceImpl implements EmployeeService {
 
 
     @Override
-    public void add(Employee employee) {
-        employeeDao.add(employee);
+    public Integer add(Employee employee) {
+        return employeeDao.add(employee);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getById(int id) {
+    public Employee getById(Integer id) {
         return employeeDao.getById(id);
     }
 
@@ -47,7 +47,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public Employee getByInn(long inn) {
+    public Employee getByInn(Long inn) {
         return employeeDao.getByInn(inn);
     }
 

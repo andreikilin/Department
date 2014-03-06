@@ -9,12 +9,12 @@ import java.util.List;
  * Created by merovingien on 3/4/14.
  */
 public interface EmployeeDao {
-    void add(Employee employee);
+    Integer add(Employee employee);
     void update(Employee employee);
     void delete(Employee employee);
-    Employee getById(int id);
+    Employee getById(Integer id);
     Employee getByEmail(String email);
-    Employee getByInn(long inn);
+    Employee getByInn(Long inn);
     List<Employee> list();
     List<Employee> listByDepartment(Department department);
 

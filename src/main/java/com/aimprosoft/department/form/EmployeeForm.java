@@ -2,31 +2,30 @@ package com.aimprosoft.department.form;
 
 import com.aimprosoft.department.entity.Department;
 import com.aimprosoft.department.entity.Employee;
-import com.aimprosoft.department.service.DepartmentService;
-import org.springframework.beans.factory.BeanFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 
-import java.beans.beancontext.BeanContext;
+import java.util.Date;
+
 
 /**
  * Created by merovingien on 3/3/14.
  */
-@Component
 public class EmployeeForm {
 
 
     private Department department;
-    private Long inn;
     private String firstName;
     private String lastName;
     private String email;
+    private String day;
+    private String month;
+    private String year;
+    private Long inn;
 
-    public EmployeeForm() {
+    private Date birthday;
 
-    }
+    public EmployeeForm() {}
 
-    public EmployeeForm(Department department, long inn, String firstName, String lastName, String email) {
+    public EmployeeForm(Department department, Long inn, String firstName, String lastName, String email) {
         this.department = department;
         this.inn = inn;
         this.firstName = firstName;
@@ -74,33 +73,39 @@ public class EmployeeForm {
         this.email = email;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        EmployeeForm that = (EmployeeForm) o;
-
-        if (!department.equals(that.department)) return false;
-        if (!email.equals(that.email)) return false;
-        if (!firstName.equals(that.firstName)) return false;
-        if (!inn.equals(that.inn)) return false;
-        if (!lastName.equals(that.lastName)) return false;
-
-        return true;
+    public String getDay() {
+        return day;
     }
 
-    @Override
-    public int hashCode() {
-        int result = department.hashCode();
-        result = 31 * result + inn.hashCode();
-        result = 31 * result + firstName.hashCode();
-        result = 31 * result + lastName.hashCode();
-        result = 31 * result + email.hashCode();
-        return result;
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public Date getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(Date birthday) {
+        this.birthday = birthday;
     }
 
     public Employee saveEmployee() {
-        return new Employee(department, firstName, lastName, email, inn);
+        return new Employee(department, firstName, lastName, email, new Date(month+"/"+day+"/"+year), inn);
     }
 }

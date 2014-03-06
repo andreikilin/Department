@@ -26,8 +26,9 @@ public class EmployeeDaoHibernate implements EmployeeDao {
     }
 
     @Override
-    public void add(Employee employee) {
-        getCurrentSession().save(employee);
+    public Integer add(Employee employee) {
+        return (Integer)getCurrentSession().save(employee);
+//        System.out.println(object.getClass().getName());
 
     }
 
@@ -42,7 +43,7 @@ public class EmployeeDaoHibernate implements EmployeeDao {
     }
 
     @Override
-    public Employee getById(int id) {
+    public Employee getById(Integer id) {
         Employee employee = (Employee) getCurrentSession().get(Employee.class, id);
         return employee;
     }
@@ -55,9 +56,10 @@ public class EmployeeDaoHibernate implements EmployeeDao {
     }
 
     @Override
-    public Employee getByInn(long inn) {
-        Employee employee = (Employee) getCurrentSession().get(Employee.class, inn);
-        return employee;
+    public Employee getByInn(Long inn) {
+        Criteria criteria = getCurrentSession().createCriteria(Employee.class);
+        criteria.add(Restrictions.like("inn", inn));
+        return (Employee) criteria.uniqueResult();
     }
 
     @Override
