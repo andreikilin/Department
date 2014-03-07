@@ -7,6 +7,7 @@
             <td>First Name: </td>
             <td><form:input path="firstName" /></td>
             <td><span class="error"><form:errors path="firstName" /></span></td>
+            <form:hidden path="employeeId" />
         </tr>
         <tr>
             <td>Last Name: </td>
@@ -46,12 +47,14 @@
             <td><span class="error"><form:errors path="birthday" /></span></td>
         </tr>
         <tr>
+            <td>Department:</td>
             <td>
                 <form:select size="1" path="department" >
                     <form:option value="0" label="Select" />
                     <form:options items="${departmentList}" itemLabel="name" itemValue="id"/>
                 </form:select>
             </td>
+            <td><span class="error"><form:errors path="department" /></span></td>
         </tr>
         <tr>
             <td><input type="submit" value="Save"></td>

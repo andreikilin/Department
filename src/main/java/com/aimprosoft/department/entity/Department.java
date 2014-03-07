@@ -69,7 +69,7 @@ public class Department {
 
         Department that = (Department) o;
 
-        if (id != that.id) return false;
+        if (!id.equals(that.id)) return false;
         if (!name.equals(that.name)) return false;
 
         return true;
@@ -77,7 +77,7 @@ public class Department {
 
     @Override
     public int hashCode() {
-        int result = id;
+        int result = id.hashCode();
         result = 31 * result + name.hashCode();
         return result;
     }

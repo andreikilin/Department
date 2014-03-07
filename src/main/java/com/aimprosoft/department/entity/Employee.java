@@ -112,7 +112,7 @@ public class Employee {
         if (!birthday.equals(employee.birthday)) return false;
         if (!department.equals(employee.department)) return false;
         if (!email.equals(employee.email)) return false;
-        if (!firstName.equals(employee.firstName)) return false;
+        if (firstName != null ? !firstName.equals(employee.firstName) : employee.firstName != null) return false;
         if (!id.equals(employee.id)) return false;
         if (!inn.equals(employee.inn)) return false;
         if (!lastName.equals(employee.lastName)) return false;
@@ -124,7 +124,7 @@ public class Employee {
     public int hashCode() {
         int result = id.hashCode();
         result = 31 * result + department.hashCode();
-        result = 31 * result + firstName.hashCode();
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
         result = 31 * result + lastName.hashCode();
         result = 31 * result + email.hashCode();
         result = 31 * result + birthday.hashCode();

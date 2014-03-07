@@ -3,6 +3,7 @@ package com.aimprosoft.department.form;
 import com.aimprosoft.department.entity.Department;
 import com.aimprosoft.department.entity.Employee;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 
@@ -12,6 +13,7 @@ import java.util.Date;
 public class EmployeeForm {
 
 
+    private Integer employeeId;
     private Department department;
     private String firstName;
     private String lastName;
@@ -31,6 +33,14 @@ public class EmployeeForm {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
+    }
+
+    public Integer getEmployeeId() {
+        return employeeId;
+    }
+
+    public void setEmployeeId(Integer employeeId) {
+        this.employeeId = employeeId;
     }
 
     public Department getDepartment() {
@@ -54,7 +64,7 @@ public class EmployeeForm {
     }
 
     public void setFirstName(String firstName) {
-        this.firstName = firstName;
+        this.firstName = firstName.trim();
     }
 
     public String getLastName() {
@@ -62,7 +72,7 @@ public class EmployeeForm {
     }
 
     public void setLastName(String lastName) {
-        this.lastName = lastName;
+        this.lastName = lastName.trim();
     }
 
     public String getEmail() {
@@ -70,7 +80,7 @@ public class EmployeeForm {
     }
 
     public void setEmail(String email) {
-        this.email = email;
+        this.email = email.trim();
     }
 
     public String getDay() {
@@ -82,7 +92,7 @@ public class EmployeeForm {
     }
 
     public void setMonth(String month) {
-        this.month = month;
+        this.month = month.trim();
     }
 
     public String getYear() {
@@ -90,11 +100,11 @@ public class EmployeeForm {
     }
 
     public void setYear(String year) {
-        this.year = year;
+        this.year = year.trim();
     }
 
     public void setDay(String day) {
-        this.day = day;
+        this.day = day.trim();
     }
 
     public Date getBirthday() {
@@ -108,4 +118,18 @@ public class EmployeeForm {
     public Employee saveEmployee() {
         return new Employee(department, firstName, lastName, email, new Date(month+"/"+day+"/"+year), inn);
     }
+
+    public void loadEmployee(Employee employee) {
+        employeeId = employee.getId();
+        department = employee.getDepartment();
+        firstName = employee.getFirstName();
+        lastName = employee.getLastName();
+        email = employee.getEmail();
+        Date employeeBirthday = employee.getBirthday();
+        day = (new SimpleDateFormat("dd")).format(employeeBirthday);
+        month = (new SimpleDateFormat("M")).format(employeeBirthday);
+        year = (new SimpleDateFormat("yyyy")).format(employeeBirthday);
+        inn = employee.getInn();
+    }
+
 }

@@ -25,8 +25,10 @@ public class IndexApplicationController {
     public String listDepartments(ModelMap model){
         String title = "Home page";
         Map<String,String> urlMap= new HashMap<String, String>();
-        urlMap.put("employee/add/", "Add employee");
-        urlMap.put("department/add/", "Add department");
+        urlMap.put("employee/list", "List employees");
+        urlMap.put("employee/add", "Add employee");
+        urlMap.put("department/add", "Add department");
+        urlMap.put("department/list","List departments");
         model.put("title", title);
         model.addAttribute("urlMap", urlMap);
 
