@@ -9,10 +9,10 @@
             <td><span class="error"><form:errors path="name" /></span></td>
         </tr>
         <tr>
-            <td><input type="submit" value="Create"></td>
+            <td><input type="submit" value="Save"></td>
         </tr>
     </table>
 
 </form:form>
 
-<%@ include file="common/header.jsp" %>
+<%@ include file="common/footer.jsp" %>

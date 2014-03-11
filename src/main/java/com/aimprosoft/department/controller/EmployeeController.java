@@ -58,7 +58,7 @@ public class EmployeeController {
     public String listEmployee(ModelMap model) {
 
         model.put("employeeList", employeeService.list());
-        return "listEmployee";
+        return "listAllEmployees";
     }
 
     @RequestMapping(value = "/employee/add", method = RequestMethod.GET)
@@ -100,8 +100,11 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employee/{id}/edit", method = RequestMethod.GET)
     public String editEmployee(@PathVariable("id") Integer id, ModelMap model) {
-        EmployeeForm employeeForm = new EmployeeForm();
+
         Employee employee = employeeService.getById(id);
+        if(employee == null)
+            return "redirect:/error404";
+        EmployeeForm employeeForm = new EmployeeForm();
         employeeForm.loadEmployee(employee);
 
         model.put("title", "Edit employee");
@@ -116,9 +119,11 @@ public class EmployeeController {
     }
 
     @RequestMapping(value = "/employee/{id}/edit", method = RequestMethod.POST)
-    public String processEditEmployee(@PathVariable("id") Integer id,
-                                      @ModelAttribute(formEmployeeAttribute) EmployeeForm employeeForm,
+    public String processEditEmployee(@PathVariable("id") Integer id, @ModelAttribute(formEmployeeAttribute) EmployeeForm employeeForm,
                                       BindingResult result, ModelMap model) {
+
+        if(employeeService.getById(id) == null)
+            return "redirect:/error500";
 
         employeeFormValidator.validate(employeeForm,result);
 
@@ -140,12 +145,22 @@ public class EmployeeController {
 
     }
 
-    /**
-    *  Soon
-    */
-     @RequestMapping(value = "/employee/{id}/delete", method = RequestMethod.GET)
+    @RequestMapping(value = "/employee/{id}/delete", method = RequestMethod.GET)
     public String deleteEmployee(@PathVariable("id") Integer id, ModelMap model) {
+        Employee employee = employeeService.getById(id);
+        if(employee == null)
+            return "redirect:/error404";
+        model.put("employeeFormAction", "employee/"+id+"/delete");
+        model.put("employee", employee);
+        return "deleteEmployee";
+    }
 
-         return form;
+    @RequestMapping(value = "/employee/{id}/delete", method = RequestMethod.POST)
+    public String processDeleteEmployee(@PathVariable("id") Integer id) {
+        Employee employee = employeeService.getById(id);
+        if(employee == null)
+            return "redirect:/error500";
+        employeeService.delete(employee);
+        return "redirect:/employee/list";
     }
 }

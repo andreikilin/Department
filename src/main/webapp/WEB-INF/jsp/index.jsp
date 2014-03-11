@@ -6,4 +6,4 @@
     <a href="${url.key}">- ${url.value}</a><br>
 </c:forEach>
 
-<%@ include file="common/header.jsp" %>
+<%@ include file="common/footer.jsp" %>

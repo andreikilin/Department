@@ -33,4 +33,4 @@
     </c:when>
 </c:choose>
 
-<%@ include file="common/header.jsp" %>
+<%@ include file="common/footer.jsp" %>

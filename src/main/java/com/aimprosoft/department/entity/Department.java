@@ -8,7 +8,7 @@ import java.util.List;
  */
 @Entity
 @Table(name="departments")
-public class Department {
+public class Department implements BusinessEntity {
 
     @Id
     @Column(name="id")

@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Entity
 @Table(name="employees")
-public class Employee {
+public class Employee implements BusinessEntity {
 
     @Id
     @Column(name="id")

@@ -5,7 +5,7 @@ package com.aimprosoft.department.form;
  */
 public class ToDepartmentForm {
     private Integer departmentId;
-    private Integer employeeId;
+    private Integer[] employeeId;
 
     public Integer getDepartmentId() {
         return departmentId;
@@ -15,13 +15,11 @@ public class ToDepartmentForm {
         this.departmentId = departmentId;
     }
 
-    public Integer getEmployeeId() {
+    public Integer[] getEmployeeId() {
         return employeeId;
     }
 
-    public void setEmployeeId(Integer employeeId) {
+    public void setEmployeeId(Integer[] employeeId) {
         this.employeeId = employeeId;
     }
-
-
 }
