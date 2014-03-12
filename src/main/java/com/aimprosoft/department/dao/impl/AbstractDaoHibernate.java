@@ -1,19 +1,18 @@
 package com.aimprosoft.department.dao.impl;
 
 import com.aimprosoft.department.dao.Dao;
+import com.aimprosoft.department.entity.BusinessEntity;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Criterion;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by merovingien on 3/11/14.
  */
-public abstract class AbstractDaoHibernate<E, I extends Serializable> implements Dao<E, I> {
+public abstract class AbstractDaoHibernate<E extends BusinessEntity> implements Dao<E> {
 
     private Class<E> entityClass;
 
@@ -25,13 +24,13 @@ public abstract class AbstractDaoHibernate<E, I extends Serializable> implements
 
     }
 
-    public Session getCurrentSession() {
+    protected Session getCurrentSession() {
         return sessionFactory.getCurrentSession();
     }
 
     @Override
-    public I add(E e) {
-        return (I)getCurrentSession().save(e);
+    public Integer add(E e) {
+        return (Integer)getCurrentSession().save(e);
     }
 
     @Override
@@ -46,10 +45,8 @@ public abstract class AbstractDaoHibernate<E, I extends Serializable> implements
 
     @SuppressWarnings("unchecked")
     @Override
-    public E getByCriteria(Criterion criterion) {
-        Criteria criteria = getCurrentSession().createCriteria(entityClass);
-        criteria.add(criterion);
-        return (E)criteria.uniqueResult();
+    public E getById(Integer id) {
+        return (E) getCurrentSession().get(entityClass, id);
     }
 
     @Override

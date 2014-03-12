@@ -8,14 +8,9 @@ import java.util.List;
 /**
  * Created by merovingien on 3/4/14.
  */
-public interface EmployeeDao extends Dao<Employee, Integer> {
-//    Integer add(Employee employee);
-//    void update(Employee employee);
-//    void delete(Employee employee);
-    Employee getById(Integer id);
+public interface EmployeeDao extends Dao<Employee> {
     Employee getByEmail(String email);
     Employee getByInn(Long inn);
-//    List<Employee> list();
-    List<Employee> listByDepartment(Department department);
+    List listByDepartment(Department department);
 
 }

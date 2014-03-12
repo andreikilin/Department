@@ -64,9 +64,9 @@ public class EmployeeFormValidator implements Validator {
             if(!EmailValidator.getInstance().isValid( employeeForm.getEmail() ) ){
                 errors.rejectValue("email", "mismatch.employeeEmail", "Email is invalid");
             }else {
-                if(employeeForm.getEmployeeId() !=0) {
+                if(employeeForm.getId() !=0) {
                     // Edit employee validation
-                    Employee employeeCurrent = employeeService.getById(employeeForm.getEmployeeId());
+                    Employee employeeCurrent = employeeService.getById(employeeForm.getId());
                     Employee employeeFound = employeeService.getByEmail(employeeForm.getEmail());
                     if(employeeFound != null)
                         if(employeeCurrent.getId() != employeeFound.getId())
@@ -89,13 +89,13 @@ public class EmployeeFormValidator implements Validator {
             if(employeeForm.getInn().toString().length() != 6) {
                 errors.rejectValue("inn", "size.employeeInn", "Inn length must be 6 digits");
             }else {
-                if(employeeForm.getEmployeeId() !=0) {
+                if(employeeForm.getId() !=0) {
                     /**
                      *  Edit employee validation
                      */
-                    Employee employeeCurrent = employeeService.getById(employeeForm.getEmployeeId());
+                    Employee employeeCurrent = employeeService.getById(employeeForm.getId());
                     Employee employeeFound = employeeService.getByInn(employeeForm.getInn());
-                    if(employeeCurrent.getId() != employeeFound.getId())
+                    if(employeeFound != null && !employeeCurrent.getId().equals(employeeFound.getId()))
                         errors.rejectValue("inn", "exist.employeeInn", "Employee with this inn already exist");
                 }else {
                     /**

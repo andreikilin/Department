@@ -6,15 +6,16 @@ import com.aimprosoft.department.form.EmployeeForm;
 import com.aimprosoft.department.service.DepartmentService;
 import com.aimprosoft.department.service.EmployeeService;
 import com.aimprosoft.department.utils.DateUtil;
+import com.aimprosoft.department.utils.DepartmentPropertyUtil;
+import com.aimprosoft.department.utils.EmployeePropertyUtil;
 import com.aimprosoft.department.validator.EmployeeFormValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-
-import java.beans.PropertyEditorSupport;
 
 /**
  * Created by merovingien on 3/3/14.
@@ -35,131 +36,118 @@ public class EmployeeController {
     @Autowired
     private DateUtil dateUtil;
 
-    private final String form = "employeeForm";
-    private final String formEmployeeAttribute = "editEmployee";
+    @Autowired
+    private DepartmentPropertyUtil departmentPropertyUtil;
+
+    @Autowired
+    private EmployeePropertyUtil employeePropertyUtil;
+
+   Logger logger = Logger.getLogger(EmployeeController.class);
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
-
-        binder.registerCustomEditor(Department.class, new PropertyEditorSupport() {
-
-                @Override
-                public void setAsText(String id) {
-                    Department department = departmentService.getById(Integer.parseInt(id));
-                    this.setValue(department);
-                    return;
-                }
-
-        });
-
+        binder.registerCustomEditor(Department.class, departmentPropertyUtil);
+        binder.registerCustomEditor(Employee.class, employeePropertyUtil);
    }
 
     @RequestMapping(value = "/employee/list", method = RequestMethod.GET)
     public String listEmployee(ModelMap model) {
-
+        logger.info("Visit info");
+        logger.debug("Debugging message");
+        logger.error("Error usage");
+        model.put("title", "List all employees");
         model.put("employeeList", employeeService.list());
         return "listAllEmployees";
     }
 
-    @RequestMapping(value = "/employee/add", method = RequestMethod.GET)
+    @RequestMapping(value = "/employee/new", method = RequestMethod.GET)
     public String addEmployee(ModelMap model) {
         EmployeeForm employeeForm = new EmployeeForm();
-
         model.put("title", "Add new employee");
         model.put("employeeFormAction", "employee/add");
-        model.put(formEmployeeAttribute, employeeForm);
+        model.put("editEmployee", employeeForm);
         model.put("departmentList",departmentService.list());
         model.put("dayList", dateUtil.getDayList());
         model.put("monthMap", dateUtil.getMonthMap());
         model.put("yearList", dateUtil.getYearList());
-
-        return form;
+        return "employeeForm";
     }
 
-    @RequestMapping(value = "/employee/add", method = RequestMethod.POST)
-    public String processAddEmployee(@ModelAttribute(formEmployeeAttribute) EmployeeForm employeeForm,
+    @RequestMapping(value = "/employee/new", method = RequestMethod.POST)
+    public String processAddEmployee(@ModelAttribute("editEmployee") EmployeeForm employeeForm,
                                      BindingResult result, ModelMap model ) {
-
        employeeFormValidator.validate(employeeForm,result);
-
        if (result.hasErrors()) {
             model.put("title", "Add new employee");
             model.put("employeeFormAction", "employee/add");
-            model.put(formEmployeeAttribute, employeeForm);
             model.put("departmentList",departmentService.list());
             model.put("dayList", dateUtil.getDayList());
             model.put("monthMap", dateUtil.getMonthMap());
             model.put("yearList", dateUtil.getYearList());
-            return form;
-        } else {
-            Employee employee = employeeForm.saveEmployee();
-            employeeService.add(employee);
-            return "redirect:/";
-        }
+           return "employeeForm";
+       } else {
+          Employee employee = employeeForm.saveEmployee();
+          employeeService.add(employee);
+          return "redirect:/";
+       }
     }
 
-    @RequestMapping(value = "/employee/{id}/edit", method = RequestMethod.GET)
-    public String editEmployee(@PathVariable("id") Integer id, ModelMap model) {
-
-        Employee employee = employeeService.getById(id);
-        if(employee == null)
+    @RequestMapping(value = "/employee/{employeeId}/edit", method = RequestMethod.GET)
+    public String editEmployee(@PathVariable("employeeId") Employee employee, ModelMap model) {
+        if(employee == null) {
             return "redirect:/error404";
+        }
         EmployeeForm employeeForm = new EmployeeForm();
         employeeForm.loadEmployee(employee);
-
         model.put("title", "Edit employee");
-        model.put("employeeFormAction", "employee/"+id+"/edit");
-        model.put(formEmployeeAttribute, employeeForm);
+        model.put("employeeFormAction", "employee/"+employee.getId()+"/edit");
+        model.put("editEmployee", employeeForm);
         model.put("departmentList",departmentService.list());
         model.put("dayList", dateUtil.getDayList());
         model.put("monthMap", dateUtil.getMonthMap());
         model.put("yearList", dateUtil.getYearList());
-
-        return form;
+        return "employeeForm";
     }
 
-    @RequestMapping(value = "/employee/{id}/edit", method = RequestMethod.POST)
-    public String processEditEmployee(@PathVariable("id") Integer id, @ModelAttribute(formEmployeeAttribute) EmployeeForm employeeForm,
+    @RequestMapping(value = "/employee/{employeeId}/edit", method = RequestMethod.POST)
+    public String processEditEmployee(@PathVariable("employeeId") Employee employee, @ModelAttribute("editEmployee") EmployeeForm employeeForm,
                                       BindingResult result, ModelMap model) {
-
-        if(employeeService.getById(id) == null)
+        if(employee == null) {
             return "redirect:/error500";
-
+        }
         employeeFormValidator.validate(employeeForm,result);
-
         if (result.hasErrors()) {
             model.put("title", "Edit employee");
-            model.put("employeeFormAction", "employee/"+id+"/edit");
-            model.put(formEmployeeAttribute, employeeForm);
+            model.put("employeeFormAction", "employee/"+employee.getId()+"/edit");
             model.put("departmentList",departmentService.list());
             model.put("dayList", dateUtil.getDayList());
             model.put("monthMap", dateUtil.getMonthMap());
             model.put("yearList", dateUtil.getYearList());
-            return form;
+            return "employeeForm";
         }else {
-            Employee employee = employeeForm.saveEmployee();
-            employee.setId(id);
+            employee = employeeForm.saveEmployee();
             employeeService.update(employee);
             return "redirect:/";
         }
 
     }
 
-    @RequestMapping(value = "/employee/{id}/delete", method = RequestMethod.GET)
-    public String deleteEmployee(@PathVariable("id") Integer id, ModelMap model) {
-        Employee employee = employeeService.getById(id);
-        if(employee == null)
+    @RequestMapping(value = "/employee/{employeeId}/delete", method = RequestMethod.GET)
+    public String deleteEmployee(@PathVariable("employeeId") Employee employee, ModelMap model) {
+        if(employee == null) {
             return "redirect:/error404";
-        model.put("employeeFormAction", "employee/"+id+"/delete");
+        }
+        model.put("title", "Delete employee");
+        model.put("employeeFormAction", "employee/"+employee.getId()+"/delete");
         model.put("employee", employee);
         return "deleteEmployee";
     }
 
-    @RequestMapping(value = "/employee/{id}/delete", method = RequestMethod.POST)
-    public String processDeleteEmployee(@PathVariable("id") Integer id) {
-        Employee employee = employeeService.getById(id);
-        if(employee == null)
+    @RequestMapping(value = "/employee/{employeeId}/delete", method = RequestMethod.POST)
+    public String processDeleteEmployee(@PathVariable("employeeId") Employee employee) {
+        if(employee == null) {
             return "redirect:/error500";
+        }
         employeeService.delete(employee);
         return "redirect:/employee/list";
     }

@@ -13,18 +13,18 @@
                 <td>Action</td>
             </tr>
             <c:forEach items="${employeeList}" var="employee" >
-                <tr>
-                    <td>${employee.firstName}</td>
-                    <td>${employee.lastName}</td>
-                    <td>${employee.inn}</td>
-                    <td>${employee.email}</td>
-                    <td>${employee.birthday}</td>
-                    <td>${employee.department.name}</td>
-                    <td>
-                        <a href="/employee/${employee.id}/edit">Edit</a>
-                        <a href="/employee/${employee.id}/delete">Delete</a>
-                    </td>
-                </tr>
+            <tr>
+                <td>${employee.firstName}</td>
+                <td>${employee.lastName}</td>
+                <td>${employee.inn}</td>
+                <td>${employee.email}</td>
+                <td>${employee.birthday}</td>
+                <td>${employee.department.name}</td>
+                <td>
+                    <a href="/employee/${employee.id}/edit">    <button type="button">Edit</button>     </a>&nbsp;
+                    <a href="/employee/${employee.id}/delete">  <button type="button">Delete</button>   </a>
+                </td>
+            </tr>
             </c:forEach>
         </table>
         </c:when>

@@ -13,7 +13,7 @@ import java.util.Date;
 public class EmployeeForm {
 
 
-    private Integer employeeId;
+    private Integer id;
     private Department department;
     private String firstName;
     private String lastName;
@@ -35,12 +35,12 @@ public class EmployeeForm {
         this.email = email;
     }
 
-    public Integer getEmployeeId() {
-        return employeeId;
+    public Integer getId() {
+        return id;
     }
 
-    public void setEmployeeId(Integer employeeId) {
-        this.employeeId = employeeId;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public Department getDepartment() {
@@ -116,11 +116,11 @@ public class EmployeeForm {
     }
 
     public Employee saveEmployee() {
-        return new Employee(department, firstName, lastName, email, new Date(month+"/"+day+"/"+year), inn);
+        return new Employee(id, department, firstName, lastName, email, new Date(month+"/"+day+"/"+year), inn);
     }
 
     public void loadEmployee(Employee employee) {
-        employeeId = employee.getId();
+        id = employee.getId();
         department = employee.getDepartment();
         firstName = employee.getFirstName();
         lastName = employee.getLastName();

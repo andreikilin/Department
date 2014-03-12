@@ -2,7 +2,7 @@
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 
 <c:choose>
-    <c:when test="${!employeeList.isEmpty()}" >
+    <c:when test="${!employeeList.isEmpty() && employeeList != null}" >
         <h3 align="center">You cannot delete department "${department.name}", because it not empty</h3>
         <table align="center" border="1">
             <tr>
@@ -24,7 +24,7 @@
         </table>
     </c:when>
 
-    <c:when test="${employeeList.isEmpty()}" >
+    <c:when test="${employeeList == null}" >
         <table align="center">
         <form:form method="POST" action="${pageContext.request.contextPath}/${departmentFormAction}" >
             <tr>

@@ -46,6 +46,16 @@ public class Employee implements BusinessEntity {
         this.inn = inn;
     }
 
+    public Employee(Integer id, Department department, String firstName, String lastName, String email, Date birthday, Long inn) {
+        this.id = id;
+        this.department = department;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.birthday = birthday;
+        this.inn = inn;
+    }
+
     public Long getInn() {
         return inn;
     }

@@ -7,7 +7,7 @@
             <td>First Name: </td>
             <td><form:input path="firstName" /></td>
             <td><span class="error"><form:errors path="firstName" /></span></td>
-            <form:hidden path="employeeId" />
+            <form:hidden path="id" />
         </tr>
         <tr>
             <td>Last Name: </td>
@@ -49,7 +49,7 @@
         <tr>
             <td>Department:</td>
             <td>
-                <form:select size="1" path="department" >
+                <form:select size="1" path="department" id="departmentId">
                     <form:option value="0" label="Select" />
                     <form:options items="${departmentList}" itemLabel="name" itemValue="id"/>
                 </form:select>

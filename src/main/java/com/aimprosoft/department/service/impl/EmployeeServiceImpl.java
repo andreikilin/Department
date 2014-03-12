@@ -1,5 +1,6 @@
 package com.aimprosoft.department.service.impl;
 
+import com.aimprosoft.department.dao.Dao;
 import com.aimprosoft.department.dao.EmployeeDao;
 import com.aimprosoft.department.entity.Department;
 import com.aimprosoft.department.entity.Employee;
@@ -15,30 +16,14 @@ import java.util.List;
  */
 @Service("EmployeeService")
 @Transactional
-public class EmployeeServiceImpl implements EmployeeService {
+public class EmployeeServiceImpl extends AbstractService<Employee> implements EmployeeService {
 
     @Autowired
     private EmployeeDao employeeDao;
 
-
     @Override
-    public Integer add(Employee employee) {
-        return employeeDao.add(employee);
-    }
-
-    @Override
-    public void update(Employee employee) {
-        employeeDao.update(employee);
-    }
-
-    @Override
-    public void delete(Employee employee) {
-        employeeDao.delete(employee);
-    }
-
-    @Override
-    public Employee getById(Integer id) {
-        return employeeDao.getById(id);
+    protected Dao<Employee> getDao() {
+        return employeeDao;
     }
 
     @Override
@@ -49,11 +34,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Override
     public Employee getByInn(Long inn) {
         return employeeDao.getByInn(inn);
-    }
-
-    @Override
-    public List<Employee> list() {
-        return employeeDao.list();
     }
 
     @Override

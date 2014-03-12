@@ -8,13 +8,8 @@ import java.util.List;
 /**
  * Created by merovingien on 3/4/14.
  */
-public interface EmployeeService {
-    Integer add(Employee employee);
-    void update(Employee employee);
-    void delete(Employee employee);
-    Employee getById(Integer id);
+public interface EmployeeService extends Service<Employee>{
     Employee getByEmail(String email);
     Employee getByInn(Long inn);
-    List<Employee> list();
     List<Employee> listByDepartment(Department department);
 }
