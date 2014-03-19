@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by merovingien on 3/11/14.
  */
 @Controller
-public class ErrorController {
+public class ErrorPageController {
 
     @RequestMapping(value = "/error403", method = RequestMethod.GET)
     public String errorPage403(ModelMap model){

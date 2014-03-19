@@ -1,5 +1,5 @@
 <%@ include file="common/header.jsp" %>
 
-<h1 align="center">Page not found</h1>
+<img style="position: absolute; margin: auto; top: 0; bottom: 0; left: 0; right: 0; " src="/images/404.jpg">
 
 <%@ include file="common/footer.jsp" %>

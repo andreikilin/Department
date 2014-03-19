@@ -1,5 +1,7 @@
 package com.aimprosoft.department.entity;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -18,6 +20,7 @@ public class Department implements BusinessEntity {
     @Column(name="name")
     private String name;
 
+    @JsonIgnore
     @OneToMany(targetEntity = Employee.class,
             cascade = CascadeType.ALL,
             fetch = FetchType.LAZY,

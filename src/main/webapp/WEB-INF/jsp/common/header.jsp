@@ -9,6 +9,6 @@
     <style type="text/css">
         .error { color: red;}
     </style>
+    <script src="<%=request.getContextPath() %>/js/jquery-1.11.0.js" ></script>
 </head>
 <body>
-

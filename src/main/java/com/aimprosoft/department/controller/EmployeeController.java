@@ -9,13 +9,14 @@ import com.aimprosoft.department.utils.DateUtil;
 import com.aimprosoft.department.utils.DepartmentPropertyUtil;
 import com.aimprosoft.department.utils.EmployeePropertyUtil;
 import com.aimprosoft.department.validator.EmployeeFormValidator;
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * Created by merovingien on 3/3/14.
@@ -42,7 +43,7 @@ public class EmployeeController {
     @Autowired
     private EmployeePropertyUtil employeePropertyUtil;
 
-   Logger logger = Logger.getLogger(EmployeeController.class);
+//    private Logger logger = Logger.getLogger(EmployeeController.class);
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -52,12 +53,16 @@ public class EmployeeController {
 
     @RequestMapping(value = "/employee/list", method = RequestMethod.GET)
     public String listEmployee(ModelMap model) {
-        logger.info("Visit info");
-        logger.debug("Debugging message");
-        logger.error("Error usage");
+//        logger.info("Visit info");
+//        logger.debug("Debugging message");
+//        logger.error("Error usage");
         model.put("title", "List all employees");
-        model.put("employeeList", employeeService.list());
         return "listAllEmployees";
+    }
+
+    @RequestMapping(value = "/employee/getList", method = RequestMethod.GET)
+    public @ResponseBody List getEmployeeList() {
+        return employeeService.listJson();
     }
 
     @RequestMapping(value = "/employee/new", method = RequestMethod.GET)

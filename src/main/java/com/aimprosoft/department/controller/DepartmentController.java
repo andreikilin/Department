@@ -16,7 +16,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 
-import java.beans.PropertyEditorSupport;
+import java.util.List;
 
 /**
  * Created by merovingien on 3/6/14.
@@ -148,9 +148,9 @@ public class DepartmentController {
         }
         model.put("title", "Delete department");
         model.put("department", department);
+        model.put("departmentFormAction", "department/"+department.getId()+"/delete");
         if(!employeeService.listByDepartment(department).isEmpty()) {
             model.put("employeeList", employeeService.listByDepartment(department));
-            model.put("departmentFormAction", "department/"+department.getId()+"/delete");
         }
         return "deleteDepartment";
     }
@@ -170,8 +170,12 @@ public class DepartmentController {
     @RequestMapping(value = "/department/list", method = RequestMethod.GET)
     public String listDepartment(ModelMap model) {
         model.put("title", "List all departments");
-        model.put("departmentList",departmentService.list());
         return "listDepartment";
+    }
+
+    @RequestMapping(value = "/department/getList", method = RequestMethod.GET)
+    public @ResponseBody List<Department> getDepartmentList() {
+        return  departmentService.list();
     }
 
     @RequestMapping(value = "/department/{departmentId}/list", method = RequestMethod.GET)
@@ -187,6 +191,11 @@ public class DepartmentController {
         model.put("employeeList", employeeService.listByDepartment(department));
         model.put("toDepartmentForm", toDepartmentForm);
         return "listEmployeeByDepartment";
+    }
+
+    @RequestMapping(value = "/department/getListByDepartment/", method = RequestMethod.GET)
+    public @ResponseBody List getLIstByDepartment(@RequestParam("departmentId") Department department) {
+        return employeeService.listJsonByDepartment(department);
     }
 
     @RequestMapping(value = "/department/{departmentId}/list", method = RequestMethod.POST)

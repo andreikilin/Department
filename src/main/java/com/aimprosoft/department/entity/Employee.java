@@ -1,6 +1,8 @@
 package com.aimprosoft.department.entity;
 
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -15,6 +17,7 @@ public class Employee implements BusinessEntity {
     @Column(name="id")
     @GeneratedValue //(strategy = GenerationType.TABLE)
     private Integer id;
+
 
     @ManyToOne(cascade = {CascadeType.REFRESH})
     @JoinColumn(name = "departmentId")

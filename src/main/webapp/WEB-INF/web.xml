@@ -1,13 +1,13 @@
 <web-app xmlns="http://java.sun.com/xml/ns/javaee"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
-http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+                            http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 
          version="3.0" metadata-complete="true">
 
   <display-name>Archetype Created Web Application</display-name>
 
-    <context-param>
+     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath*:spring/applicationContext.xml</param-value>
     </context-param>
@@ -36,4 +36,11 @@ http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
         <servlet-name>appServlet</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/error404</location>
+    </error-page>
+
+
 </web-app>
