@@ -193,7 +193,7 @@ public class DepartmentController {
         return "listEmployeeByDepartment";
     }
 
-    @RequestMapping(value = "/department/getListByDepartment/", method = RequestMethod.GET)
+    @RequestMapping(value = "/department/getListByDepartment", method = RequestMethod.GET)
     public @ResponseBody List getLIstByDepartment(@RequestParam("departmentId") Department department) {
         return employeeService.listJsonByDepartment(department);
     }
