@@ -30,15 +30,19 @@ PageController.prototype.createTable = function () {
 };
 
 PageController.prototype.refreshTable = function (departmentId) {
-    $('tr:gt(1)', this.table).detach();
+    $('tr:gt(1)', this.table).empty();
 
-    $.ajax({
+    $.ajax( {
         type: "GET",
         url: "/department/getListByDepartment",
         data: {departmentId: departmentId},
         context: this,
         dataType: 'json'
     }).done(function (data) {
+        $('#Employees')
+            .append($('<button/>').html('Hide').on('click', function() {
+                $('#Employees').hide('slow','linear','');
+            }))
         this.table.append($('<tr/>')
             .append($('<td/>').html('First Name'))
             .append($('<td/>').html('Last Name'))
@@ -74,7 +78,7 @@ PageController.hideTable = function () {
     this.table.hide();
 };
 
-PageController,showTable = function() {
+PageController.showTable = function() {
     this.table.show;
 };
 
