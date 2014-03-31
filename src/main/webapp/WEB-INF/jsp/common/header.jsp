@@ -9,6 +9,12 @@
     <style type="text/css">
         .error { color: red;}
     </style>
-    <script type="application/javascript" src="<%=request.getContextPath() %>/js/jquery-1.11.0.js" ></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery-1.11.0.js" ></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/class.js" ></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/jquery.validate.js" ></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/employeeForm.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/department.js"></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/index.js" ></script>
+    <script type="text/javascript" src="<%=request.getContextPath() %>/js/main.js" ></script>
 </head>
 <body>

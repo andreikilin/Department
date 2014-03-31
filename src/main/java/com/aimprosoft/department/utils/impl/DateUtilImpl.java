@@ -13,7 +13,7 @@ import java.util.*;
 public class DateUtilImpl implements DateUtil{
     @Override
     public List<String> getDayList() {
-        List<String> dayList = new ArrayList<String>(31);
+        List<String> dayList = new ArrayList<>(31);
         for(Integer i = 1; i<= 31; i++) {
             dayList.add(i.toString());
         }
@@ -23,7 +23,7 @@ public class DateUtilImpl implements DateUtil{
     @Override
     public Map<String, String> getMonthMap() {
         String[] months = new DateFormatSymbols().getMonths();
-        Map<String,String> monthMap = new HashMap<String, String>(12);
+        Map<String,String> monthMap = new LinkedHashMap<>(12);
         for(int i = 0; i < 12; i++) {
             monthMap.put(String.valueOf(1+i), months[i]);
         }
@@ -32,7 +32,7 @@ public class DateUtilImpl implements DateUtil{
 
     @Override
     public List<String> getYearList() {
-        List<String> yearList = new ArrayList<String>();
+        List<String> yearList = new ArrayList<>();
         for(Integer i = 1930 ; i<= Calendar.getInstance().get(Calendar.YEAR); i++ ) {
             yearList.add(i.toString());
         }

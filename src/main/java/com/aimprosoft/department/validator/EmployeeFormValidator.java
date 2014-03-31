@@ -64,7 +64,7 @@ public class EmployeeFormValidator implements Validator {
             if(!EmailValidator.getInstance().isValid( employeeForm.getEmail() ) ){
                 errors.rejectValue("email", "mismatch.employeeEmail", "Email is invalid");
             }else {
-                if(employeeForm.getId() !=0) {
+                if(employeeForm.getId() != null && employeeForm.getId() !=0) {
                     // Edit employee validation
                     Employee employeeCurrent = employeeService.getById(employeeForm.getId());
                     Employee employeeFound = employeeService.getByEmail(employeeForm.getEmail());
@@ -89,7 +89,7 @@ public class EmployeeFormValidator implements Validator {
             if(employeeForm.getInn().toString().length() != 6) {
                 errors.rejectValue("inn", "size.employeeInn", "Inn length must be 6 digits");
             }else {
-                if(employeeForm.getId() !=0) {
+                if(employeeForm.getId() != null && employeeForm.getId() !=0) {
                     /**
                      *  Edit employee validation
                      */

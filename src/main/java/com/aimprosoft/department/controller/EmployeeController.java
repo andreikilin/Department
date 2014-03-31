@@ -9,6 +9,7 @@ import com.aimprosoft.department.utils.DateUtil;
 import com.aimprosoft.department.utils.DepartmentPropertyUtil;
 import com.aimprosoft.department.utils.EmployeePropertyUtil;
 import com.aimprosoft.department.validator.EmployeeFormValidator;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -43,7 +44,7 @@ public class EmployeeController {
     @Autowired
     private EmployeePropertyUtil employeePropertyUtil;
 
-//    private Logger logger = Logger.getLogger(EmployeeController.class);
+    private Logger logger = Logger.getLogger(EmployeeController.class);
 
     @InitBinder
     public void initBinder(WebDataBinder binder) {
@@ -65,23 +66,33 @@ public class EmployeeController {
         return employeeService.listJson();
     }
 
+    @RequestMapping(value = "/email.do", method = RequestMethod.POST)
+    public @ResponseBody boolean emailVerification(String email) {
+        return employeeService.getByEmail(email) != null;
+    }
+
     @RequestMapping(value = "/employee/new", method = RequestMethod.GET)
     public String addEmployee(ModelMap model) {
-        EmployeeForm employeeForm = new EmployeeForm();
+//        EmployeeForm employeeForm = new EmployeeForm();
         model.put("title", "Add new employee");
-        model.put("employeeFormAction", "employee/add");
-        model.put("editEmployee", employeeForm);
-        model.put("departmentList",departmentService.list());
-        model.put("dayList", dateUtil.getDayList());
-        model.put("monthMap", dateUtil.getMonthMap());
-        model.put("yearList", dateUtil.getYearList());
+//        model.put("employeeFormAction", "employee/add");
+//        model.put("editEmployee", employeeForm);
+//        model.put("departmentList",departmentService.list());
+//        model.put("dayList", dateUtil.getDayList());
+//        model.put("monthMap", dateUtil.getMonthMap());
+//        model.put("yearList", dateUtil.getYearList());
         return "employeeForm";
     }
 
-    @RequestMapping(value = "/employee/new", method = RequestMethod.POST)
+    @RequestMapping(value = "/employee/newUU", method = RequestMethod.POST)
     public String processAddEmployee(@ModelAttribute("editEmployee") EmployeeForm employeeForm,
                                      BindingResult result, ModelMap model ) {
-       employeeFormValidator.validate(employeeForm,result);
+       try{
+           employeeFormValidator.validate(employeeForm,result);
+       }catch (NullPointerException e) {
+           logger.error(e.toString());
+           return "redirect:/error500";
+       }
        if (result.hasErrors()) {
             model.put("title", "Add new employee");
             model.put("employeeFormAction", "employee/add");

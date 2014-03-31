@@ -34,7 +34,8 @@ LinkController.prototype.hide = function() {
     this.element.hide('slow', 'swing', '');
 }
 
-$(document).ready(function() {
+//$(document).ready
+var tratata = (function() {
     var linkController = new LinkController();
     var onShow = (function() {
         return function() {
