@@ -5,27 +5,24 @@ var DepartmentForm = Form.extend({
     },
     createTable: function() {
         var table = $('<table id="departmentTable" border="1" align="center"/>');
-        table.on('click', 'button.listEmployees', function(e) {
+        table.on('click', 'button.listEmployees', $.proxy(function(e) {
             var button = $(e.target);
             var tr =button.parents('tr');
             var department = tr.data('context').department;
-            var self = tr.data('context').__this;
-            self.employeesTable(department);
-        });
-        table.on('click', 'button.deleteDepartment', function(e) {
+            this.employeesTable(department);
+        }, this));
+        table.on('click', 'button.deleteDepartment', $.proxy(function(e) {
             var button = $(e.target);
             var tr =button.parents('tr');
             var department = tr.data('context').department;
-            var self = tr.data('context').__this;
-            self.removeDepartment(department);
-        });
-        table.on('click', 'button.editDepartment', function(e) {
+            this.removeDepartment(department);
+        }, this));
+        table.on('click', 'button.editDepartment', $.proxy(function(e) {
             var button = $(e.target);
             var tr =button.parents('tr');
             var department = tr.data('context').department;
-            var self = tr.data('context').__this;
             self.editDepartment(department);
-        })
+        }, this));
         return table;
     },
 
@@ -37,7 +34,7 @@ var DepartmentForm = Form.extend({
         }).done(function (departments) {
                 for (var i = 0; i < departments.length; i++) {
                     var tr = $('<tr/>')
-                        .data('context', {department: departments[i], __this: this})
+                        .data('context', {department: departments[i]})
                         .append($('<td/>').html(departments[i].name))
                         .append($('<td/>')
                             .append($('<a href="/department/' + departments[i].id + '/add"/>')
@@ -151,7 +148,6 @@ var DepartmentForm = Form.extend({
                 $.ajax({
                     type: "POST",
                     url: "/department/new",
-//                    context: this,
                     data: {
                         name: $('input[name="name"]').val()
                     },

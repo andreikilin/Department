@@ -51,7 +51,90 @@ public class DepartmentController {
     private Logger logger = Logger.getLogger(EmployeeController.class);
 
 
-//    @RequestMapping(value = "/department/new", method = RequestMethod.GET)
+
+    @RequestMapping(value = "/department/new", method = RequestMethod.POST)
+    public @ResponseBody List jsonNewDepartment(DepartmentForm departmentForm, BindingResult result) {
+        departmentFormValidator.validate(departmentForm,result);
+        List response = new LinkedList();
+        if(result.hasErrors()) {
+            response.add("Validation error:");
+            for(int i = 0; i<result.getErrorCount(); i++) {
+                FieldError error = (FieldError) result.getAllErrors().get(i);
+                response.add(error.getField() + ": " + error.getDefaultMessage());
+            }
+            return response;
+        }
+        Department department = departmentForm.saveDepartment();
+        try{
+            departmentService.add(department);
+        }catch (Exception e) {
+            logger.error(e.toString());
+            response.add("Service error:");
+            response.add(e.getMessage());
+            return response;
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "/department/edit", method = RequestMethod.POST)
+    public @ResponseBody List jsonEditDepartment(@ModelAttribute DepartmentForm departmentForm, BindingResult result) {
+        List response = new LinkedList();
+        Integer id = departmentForm.getId();
+        if(id != null && id != 0 && departmentService.getById(id) != null) {
+            Department department = departmentService.getById(id);
+            departmentFormValidator.validate(departmentForm,result);
+
+            if(result.hasErrors()) {
+                response.add("Validation error:");
+                for(int i = 0; i<result.getErrorCount(); i++) {
+                    FieldError error = (FieldError) result.getAllErrors().get(i);
+                    response.add(error.getField() + ": " + error.getDefaultMessage());
+                }
+                return response;
+            }
+            department = departmentForm.updateDepartment(department);
+            try{
+                departmentService.update(department);
+            }catch (Exception e) {
+                logger.error(e.toString());
+                response.add("Service error:");
+                response.add(e.getMessage());
+                return response;
+            }
+            return response;
+        }
+        response.add("Invalid request");
+        return response;
+    }
+
+    @RequestMapping(value = "/department/delete", method = RequestMethod.POST)
+    public @ResponseBody String jsonDeleteDepartment(@RequestParam("departmentId") Department department) {
+        if(department == null) {
+            return "error";
+        }
+        try {
+            departmentService.delete(department);
+        }catch(Exception e) {
+            logger.error(e.toString());
+            return "service error";
+        }
+        return "successful";
+    }
+
+    @RequestMapping(value = "/department.do", method = RequestMethod.POST)
+    public @ResponseBody boolean departmentExist(Integer id, String name) {
+        if(id != null && id != 0) {
+            Department depEdit = departmentService.getById(id);
+            if( depEdit!= null) {
+                if(depEdit.equals(departmentService.getByName(name))) {
+                    return true;
+                }
+            }
+        }
+        return departmentService.getByName(name) == null;
+    }
+
+    //    @RequestMapping(value = "/department/new", method = RequestMethod.GET)
 //    public String newDepartment(ModelMap model) {
 //        DepartmentForm departmentForm = new DepartmentForm();
 //        model.put("title", "Create new department");
@@ -76,38 +159,6 @@ public class DepartmentController {
 //            return "redirect:/";
 //        }
 //    }
-
-    @RequestMapping(value = "/department/new", method = RequestMethod.POST)
-    public @ResponseBody List jsonNewDepartment(@ModelAttribute DepartmentForm departmentForm, BindingResult result) {
-        departmentFormValidator.validate(departmentForm,result);
-        List response = new LinkedList();
-        if(result.hasErrors()) {
-            response.add("Validation error:");
-            for(int i = 0; i<result.getErrorCount(); i++) {
-                FieldError error = (FieldError) result.getAllErrors().get(i);
-                response.add(error.getField() + ": " + error.getDefaultMessage());
-            }
-            return response;
-        }
-        Department department = departmentForm.saveDepartment();
-        try{
-            departmentService.add(department);
-        }catch (Exception e) {
-            logger.error(e.toString());
-            response.add("Service error:");
-            response.add(e.getMessage());
-            return response;
-        }
-        return response;
-    }
-
-    @RequestMapping(value = "/department.do", method = RequestMethod.POST)
-    public @ResponseBody boolean departmentExist(Integer id, String name) {
-        if(id != null && id != 0) {
-            departmentService.getById(id);
-        }
-        return departmentService.getByName(name) == null;
-    }
 
 //    @RequestMapping(value = "/department/{departmentId}/add", method = RequestMethod.GET)
 //    public String addEmployeesToDepartment(@PathVariable("departmentId") Department department, ModelMap model) {
@@ -191,19 +242,7 @@ public class DepartmentController {
 //        return "deleteDepartment";
 //    }
 
-    @RequestMapping(value = "/department/delete", method = RequestMethod.POST)
-    public @ResponseBody String jsonDeleteDepartment(@RequestParam("departmentId") Department department) {
-        if(department == null) {
-            return "error";
-        }
-        try {
-            departmentService.delete(department);
-        }catch(Exception e) {
-            logger.error(e.toString());
-            return "service error";
-        }
-        return "successful";
-    }
+
 
 //    @RequestMapping(value = "/department/{departmentId}/delete", method = RequestMethod.POST)
 //    public String processDeleteDepartment(@PathVariable("departmentId") Department department) {
