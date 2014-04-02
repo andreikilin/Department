@@ -138,10 +138,6 @@ public class EmployeeController {
         return employeeService.getByInn(inn) == null;
     }
 
-    @RequestMapping(value = "/employee.do", method = RequestMethod.POST)
-    public @ResponseBody boolean employeeVerification(Integer id, String email ,Long inn) {
-        return false;
-    }
 
 //    @RequestMapping(value = "/employee/list", method = RequestMethod.GET)
 //    public String listEmployee(ModelMap model) {

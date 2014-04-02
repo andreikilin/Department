@@ -1,15 +1,52 @@
 var DepartmentForm = Form.extend({
     init: function() {
-        this.table = this.createTable();
+        this.employees = new EmployeeForm();
+        this.table = this.__createTable();
+        this.form = this.__createForm();
+        this.form.validate({
+            context: this,
+//            onkeyup: false,
+            rules: {
+                name: {
+                    required: true,
+                    minlength: 3,
+                    maxlength: 16,
+                    remote: {
+                        url: "/department.do",
+                        type: "POST",
+                        data: {
+                            id: function() {
+                                return $('input[name="id"]').val();
+                            },
+                            name: function() {
+                                return  $('input[name="name"]').val();
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                name: {
+                    required: "Field is required",
+                    length: "Length must be more 3 and less 16 characters",
+                    remote: "This name is already taken."
+                }
+
+            },
+            submitHandler: $.proxy(function() {
+                this.__saveData();
+                this.__refreshForm();
+            },this)
+        });
 
     },
-    createTable: function() {
+    __createTable: function() {
         var table = $('<table id="departmentTable" border="1" align="center"/>');
         table.on('click', 'button.listEmployees', $.proxy(function(e) {
             var button = $(e.target);
             var tr =button.parents('tr');
             var department = tr.data('context').department;
-            this.employeesTable(department);
+            this.employees.listEmployeesByDepartment(department);
         }, this));
         table.on('click', 'button.deleteDepartment', $.proxy(function(e) {
             var button = $(e.target);
@@ -21,12 +58,12 @@ var DepartmentForm = Form.extend({
             var button = $(e.target);
             var tr =button.parents('tr');
             var department = tr.data('context').department;
-            self.editDepartment(department);
+            this.editDepartment(department);
         }, this));
         return table;
     },
 
-    putDepartments: function () {
+    __putDepartments: function () {
         this.table.children().remove();
         $.ajax({
             url: "/department/getList",
@@ -51,122 +88,80 @@ var DepartmentForm = Form.extend({
             });
     },
 
-    employeesTable: function(department) {
-        //Thinking about "this"
-
-        $('#listEmployeesIsEmpty').remove();
-        $('#employeesTable').remove();
-
-        var table = $('<table id="employeesTable" border="1" align="center"/>').appendTo('body');
-
-        table.on('click', 'button#close', function() {
-            table.remove();
+    __createForm: function () {
+        var form = $('<form id="addDepartment"/>');
+        form.on('click', 'button.close', function() {
+            form.detach();
         });
-
-        $.ajax( {
-            type: "GET",
-            url: "/department/getListByDepartment",
-            data: {departmentId: department.id},
-            context: this,
-            dataType: 'json'
-        }).done(function (data) {
-            if(data.length != 0) {
-                table.append($('<tr/>')
-                    .append($('<td/>').html('First Name'))
-                    .append($('<td/>').html('Last Name'))
-                    .append($('<td/>').html('INN'))
-                    .append($('<td/>').html('Email'))
-                    .append($('<td/>').html('Birthday'))
-                    .append($('<td/>').html('Department'))
-                    .append($('<td/>').html('Action')));
-                for (var i = 0; i < data.length; i++) {
-                    var tr = $('<tr/>').data('department', data[i]);
-
-                    tr.append($('<td/>').text(tr.data('department').firstName))
-                        .append($('<td/>').html(data[i].lastName))
-                        .append($('<td/>').html(data[i].inn))
-                        .append($('<td/>').html(data[i].email))
-                        .append($('<td/>').html(data[i].day + '-' + data[i].month + '-' + data[i].year))
-                        .append($('<td/>').html(data[i].department.name))
-                        .append($('<td/>')
-                            .append($('<a href="/employee/' + data[i].id + '/edit"/>')
-                                .append($('<button/>')
-                                    .html('Edit')))
-                            .append($('<a href="/employee/' + data[i].id + '/delete"/>')
-                                .append($('<button/>')
-                                    .html('Delete')))
-                        );
-                    table.append(tr);
-                }
-                table
-                    .append($('<button id="close"/>').html('Close'));
-            }else {
-                $('<h4 align="center" id="listEmployeesIsEmpty"/>').html("No employees in \""+ department.name + "\"")
-                    .appendTo('body');
-            }
-
-        });
-    },
-
-    newDepartment: function () {
-        var dialog = $('<div class="addDepartmentDialog"/> ');
-        dialog.empty();
-        var self = this;
-        dialog
-            .append($('<form id="addDepartment"/>')
+        form.empty();
+        form
             .append($('<table/>')
                 .append($('<tr/>')
                     .append($('<td/>').html("Department Name"))
                     .append($('<td/>')
-                        .append($('<input name="name"/>')))
-                    .append($('<input type="submit" class="submit" value="Add"/>')))));
-        dialog.appendTo('body');
-        $('#addDepartment').validate({
-//            context:this,
-//            onkeyup: false,
-            rules: {
-                name: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 16,
-                    remote: {
-                        url: "/department.do",
-                        type: "POST"
-                    }
-                }
-            },
-            messages: {
-                name: {
-                    required: "Field is required",
-                    minlength: "Length must be more 3 and less 16 characters",
-                    maxlength: "Length must be more 3 and less 16 characters",
-                    remote: "This name is already taken."
-                }
+                        .append($('<input name="name"/>'))
+                        .append($('<input hidden="true" name="id"/>')))
+                    .append($('<input type="submit" class="submit" value="Save"/>'))
+                    .append($('<button class="close"/>').html("Cancel"))));
+        return form;
+    },
 
+    __refreshForm: function() {
+        this.form.detach();
+    },
+
+    __saveData: function() {
+        var url = "";
+        switch(this.action) {
+            case "add":
+                url = "/department/new";
+                break;
+            case "edit":
+                url = "/department/edit";
+                break;
+            default :
+                break;
+        }
+        $.ajax({
+            type: "POST",
+            url: url,
+            context: this,
+            data: {
+                id: $('input[name="id"]').val(),
+                name: $('input[name="name"]').val()
             },
-            submitHandler: function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/department/new",
-                    data: {
-                        name: $('input[name="name"]').val()
-                    },
-                    success: function (response) {
-                        if (response.length != 0) {
-                            var message = "";
-                            for (var i = 0; i < response.length; i++) {
-                                message += response[i] + '\n';
-                            }
-                            alert(message);
-                        } else {
-//                            alert("Success");
-                            dialog.empty();
-                            self.putDepartments();
-                        }
+            success: $.proxy(function (response) {
+                if (response.length != 0) {
+                    var message = "";
+                    for (var i = 0; i < response.length; i++) {
+                        message += response[i] + '\n';
                     }
-                });
-            }
-        })
+                    alert(message);
+                } else {
+//                            alert("Success");
+//                    this.form.empty();
+                    this.action="";
+                    this.__putDepartments();
+                }
+            }, this)
+        });
+    },
+
+    showDepartments: function() {
+        this.__putDepartments();
+    },
+
+    addDepartment: function() {
+        this.form.appendTo('body');
+        this.action = "add";
+    },
+
+    editDepartment: function(department) {
+        this.form.appendTo('body');
+        this.action = "edit";
+        $('input[name="id"]').attr("value", department.id);
+        $('input[name="name"]').attr("value", department.name);
+
     },
 
     removeDepartment: function(department) {
@@ -189,81 +184,10 @@ var DepartmentForm = Form.extend({
                     data: {departmentId: department.id}
                 }).done(function(response) {
 //                    alert(response);
-                    this.putDepartments();
+                    this.__putDepartments();
                 });
             }
         });
-    },
-
-    editDepartment: function(department) {
-        var dialog = $('<div class="editDepartmentDialog"/> ');
-        dialog.empty();
-        var self = this;
-        dialog
-            .append($('<form id="editDepartment"/>')
-                .append($('<table/>')
-                    .append($('<tr/>')
-                        .append($('<td/>').html("Department Name"))
-                        .append($('<td/>')
-                            .append($('<input name="name"/>'))
-                            .append($('<input hidden="true" name="id"/>')))
-                        .append($('<input type="submit" class="submit" value="Save"/>')))));
-        dialog.appendTo('body');
-        $('input[name="id"]').attr("value", department.id);
-        $('input[name="name"]').attr("value", department.name);
-
-        $('#editDepartment').validate({
-            rules: {
-                name: {
-                    required: true,
-                    minlength: 3,
-                    maxlength: 16,
-                    remote: {
-                        url: "/department.do",
-                        type: "POST",
-                        data: {
-                            id: function() {
-                                return $('input[name="id"]').val();
-                            },
-                            name: function() {
-                                return  $('input[name="name"]').val();
-                            }
-                        }
-                    }
-                }
-            },
-            messages: {
-                name: {
-                    required: "Field is required",
-                    minlength: "Length must be more 3 and less 16 characters",
-                    maxlength: "Length must be more 3 and less 16 characters",
-                    remote: "This name is already taken."
-                }
-
-            },
-            submitHandler: function () {
-                $.ajax({
-                    type: "POST",
-                    url: "/department/edit",
-                    data: {
-                        id: $('input[name="id"]').val(),
-                        name: $('input[name="name"]').val()
-                    },
-                    success: function (response) {
-                        if (response.length != 0) {
-                            var message = "";
-                            for (var i = 0; i < response.length; i++) {
-                                message += response[i] + '\n';
-                            }
-                            alert(message);
-                        } else {
-                            alert("Success");
-                            dialog.empty();
-                            self.putDepartments();
-                        }
-                    }
-                });
-            }
-        })
     }
+
 });

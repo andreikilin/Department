@@ -1,6 +1,5 @@
 var PageController = Class.extend({
     init: function() {
-        var self = this;
         var departments = new DepartmentForm();
         var employees = new EmployeeForm();
         $('body')
@@ -9,31 +8,24 @@ var PageController = Class.extend({
 
         var actions = $('#actions');
         actions.on('click', 'button.viewDepartments', function() {
-            self.departmentsTable(departments);
+            departments.showDepartments();
         });
         actions.on('click', 'button.viewAddDepartment', function (){
-            self.addDepartment(departments);
+            departments.addDepartment();
         });
         actions.on('click', 'button.viewAddEmployee', function() {
-            self.addEmployee(employees);
+            employees.addEmployee();
+        });
+        actions.on('click', 'button.viewAllEmployees', function() {
+            employees.listEmployees();
         });
 
         $(actions)
             .append($('<button class="viewDepartments"/>').html("List departments"))
             .append($('<button class="viewAddDepartment"/>').html("Add department"))
-            .append($('<button class="viewAddEmployee"/>').html("Add employee"));
+            .append($('<button class="viewAddEmployee"/>').html("Add employee"))
+            .append($('<button class="viewAllEmployees"/>').html("All employees"));
 
-    },
-    departmentsTable: function(departments) {
-        departments.putDepartments();
-
-    },
-    addDepartment: function(departments) {
-        departments.newDepartment();
-    },
-
-    addEmployee: function(employees){
-        employees.addEmployeeForm();
     }
 
 });
